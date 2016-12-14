@@ -1,5 +1,7 @@
 #import "AppDelegate.h"
-#include "PythonGlue.h"
+#import "PythonGlue.h"
+
+#pragma message "AppDelegate.m"
 
 @implementation AppDelegate
 
@@ -55,13 +57,12 @@
 
 - (NSString *)callPython:(NSString *)method:(NSString *)arg {
     PyObject *delegate = [self getDelegate];
-    PyObject *pyMethodString = NSStringToPythonString(method);
-    PyObject *pyMethod = PyObject_GetAttrString(delegate, pyMethodString);
+    PyObject *pyMethod = PyObject_GetAttrString(delegate, method);
     NSString *res = NULL;
     if (pyMethod != NULL) {
         PyObject *arglist = Py_BuildValue("(s)", [arg UTF8String]);
         if (arglist != NULL) {
-            pyRes = PyObject_CallObject(delegate, arglist);
+            PyObject *pyRes = PyObject_CallObject(delegate, arglist);
             if (pyRes != NULL) {
                 char *string = PyString_AsString(pyRes);
                 if (string != NULL) {
@@ -72,7 +73,6 @@
         }
         Py_DECREF(arglist);
     }
-    Py_DECREF(pyMethodString);
     Py_DECREF(pyMethod);
     return res;
 }
