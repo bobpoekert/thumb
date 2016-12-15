@@ -10,9 +10,10 @@ class Server(object):
     def __init__(self, webkit_handle):
         try:
             self.webkit_handle = webkit_handle
-            self.thread = threading.Thread(target=self.delay_test)
-            self.thread.start()
-            print self.eval_js('document.write("bonk")')
+            #self.thread = threading.Thread(target=self.delay_test)
+            #self.thread.start()
+            #print self.eval_js('document.write(app.callPython("test", "hello"))')
+            print repr(self.eval_js('typeof(window.container.callPython("test", "foo")'))
         except:
             traceback.print_exc()
 

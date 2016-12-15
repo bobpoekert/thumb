@@ -12,7 +12,7 @@
 
 - (NSString *)evalJavascript:(NSString *)code;
 - (IBAction)bringMainWindowToFront:(id)sender;
-- (void)changeIcon:(NSString *)iconName;
 - (NSString *)appURL;
+- (NSString *)callPython:(NSString *)method:(NSString *)arg;
 
 @end

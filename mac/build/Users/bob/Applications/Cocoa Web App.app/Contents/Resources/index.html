@@ -8,10 +8,14 @@
 <body>
     <h1 id="target">fail</h1>
     <script>
+        try {
+            document.getElementById('target').innerHTML = typeof(window.app.callPython__);
+        } catch (e) {
+            document.getElementById('target').innerHTML = e.toString();
+        }
         function pythonMessage(message) {
             document.getElementById('target').innerHTML = message;
         }
-        document.getElementById('target').innerHTML = app.callPython('test', 'test');
     </script>
 </body>
 </html>
