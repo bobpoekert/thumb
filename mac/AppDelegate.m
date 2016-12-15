@@ -1,26 +1,27 @@
 #import "AppDelegate.h"
-#import "PythonGlue.h"
-
-#pragma message "AppDelegate.m"
+#include "PythonGlue.h"
+#include <Python/Python.h>
+#include "stdio.h"
 
 @implementation AppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-	[webView setMainFrameURL:[self appURL]];
+    printf("finished launching\n");
+    pythonDelegate = loadDelegate(self);
+    printf("got delegate: %x\n", pythonDelegate);
+	//[webView setMainFrameURL:[self appURL]];
 }
 
+/*
 - (void)dealloc {
     if (pythonDelegate != NULL) {
+        PyGILState_STATE gilState = PyGILState_Ensure();
         Py_DECREF(pythonDelegate);
+        PyGILState_Release(gilState);
     }
+    [super dealloc];
 }
-
-- (PyObject *)getDelegate {
-    if (pythonDelegate != NULL) {
-        pythonDelegate = loadDelegate(self);
-    }
-    return pythonDelegate;
-}
+*/
 
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)theApplication hasVisibleWindows:(BOOL)flag {
 	[self bringMainWindowToFront:nil];
@@ -56,7 +57,10 @@
 }
 
 - (NSString *)callPython:(NSString *)method:(NSString *)arg {
-    PyObject *delegate = [self getDelegate];
+    printf("callPython\n");
+    PyGILState_STATE gilState = PyGILState_Ensure();
+    printf("got gil\n");
+    PyObject *delegate = pythonDelegate;
     PyObject *pyMethod = PyObject_GetAttrString(delegate, method);
     NSString *res = NULL;
     if (pyMethod != NULL) {
@@ -74,6 +78,7 @@
         Py_DECREF(arglist);
     }
     Py_DECREF(pyMethod);
+    PyGILState_Release(gilState);
     return res;
 }
 

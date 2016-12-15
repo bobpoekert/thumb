@@ -4,7 +4,6 @@
 #import <WebKit/WebKit.h>
 #include <Python/Python.h>
 
-
 @interface AppDelegate : NSObject <NSApplicationDelegate> {
 	IBOutlet id webView;
 	IBOutlet NSWindow *window;
@@ -15,6 +14,5 @@
 - (IBAction)bringMainWindowToFront:(id)sender;
 - (void)changeIcon:(NSString *)iconName;
 - (NSString *)appURL;
-- (PyObject *)getDelegate;
 
 @end

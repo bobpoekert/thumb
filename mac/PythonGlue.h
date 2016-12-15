@@ -3,7 +3,6 @@
 #include <Python/Python.h>
 #import "AppDelegate.h"
 
-
 PyObject *NSStringToPythonString(NSString *inp);
 PyObject *wrapNSObject(NSObject *inp);
 static PyObject *module_evalJS(PyObject *self, PyObject *args);

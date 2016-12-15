@@ -12,7 +12,7 @@ class Server(object):
             self.webkit_handle = webkit_handle
             self.thread = threading.Thread(target=self.delay_test)
             self.thread.start()
-            print self.eval_js('document.write(app.callPython("test", "hello"))')
+            print self.eval_js('document.write("bonk")')
         except:
             traceback.print_exc()
 

@@ -14,6 +14,7 @@
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		C4A222201E01CED6006098D2 /* Python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4A2221F1E01CED6006098D2 /* Python.framework */; };
 		C4A222221E01EA4A006098D2 /* PythonGlue.m in Sources */ = {isa = PBXBuildFile; fileRef = C4A222211E01EA4A006098D2 /* PythonGlue.m */; };
+		C4A222241E01FE8D006098D2 /* main.py in Resources */ = {isa = PBXBuildFile; fileRef = C4A222231E01FE8D006098D2 /* main.py */; };
 		DC924AB51105110500E5D32F /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = DC924AB41105110500E5D32F /* index.html */; };
 		DC924AC11105127300E5D32F /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC924AC01105127300E5D32F /* WebKit.framework */; };
 		DC924B9F110515D200E5D32F /* mac.png in Resources */ = {isa = PBXBuildFile; fileRef = DC924B9E110515D200E5D32F /* mac.png */; };
@@ -36,6 +37,7 @@
 		8D1107320486CEB800E47090 /* Cocoa Web App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cocoa Web App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4A2221F1E01CED6006098D2 /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python.framework; path = System/Library/Frameworks/Python.framework; sourceTree = SDKROOT; };
 		C4A222211E01EA4A006098D2 /* PythonGlue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PythonGlue.m; sourceTree = "<group>"; };
+		C4A222231E01FE8D006098D2 /* main.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = main.py; sourceTree = "<group>"; };
 		DC924AB41105110500E5D32F /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		DC924AC01105127300E5D32F /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		DC924B9E110515D200E5D32F /* mac.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mac.png; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 		29B97314FDCFA39411CA2CEA /* Cocoa Web App */ = {
 			isa = PBXGroup;
 			children = (
+				C4A222231E01FE8D006098D2 /* main.py */,
 				C4A222211E01EA4A006098D2 /* PythonGlue.m */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
@@ -189,6 +192,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C4A222241E01FE8D006098D2 /* main.py in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
 				DC924AB51105110500E5D32F /* index.html in Resources */,
