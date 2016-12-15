@@ -9,7 +9,7 @@
     <h1 id="target">fail</h1>
     <script>
         try {
-            document.getElementById('target').innerHTML = typeof(window.app.callPython__);
+            document.getElementById('target').innerHTML = window.app.callPython__('test', 'test');
         } catch (e) {
             document.getElementById('target').innerHTML = e.toString();
         }

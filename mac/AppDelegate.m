@@ -68,22 +68,30 @@
 
 
 - (NSString *)callPython:(NSString *)method:(NSString *)arg {
+    char *cMethod = [method UTF8String];
+    char *cArg = [arg UTF8String];
     printf("callPython\n");
     PyGILState_STATE gilState = PyGILState_Ensure();
     printf("got gil\n");
     PyObject *delegate = pythonDelegate;
-    PyObject *pyMethod = PyObject_GetAttrString(delegate, method);
+    printf("delegate: %x, method: %s, arg: %s\n", delegate, cMethod, cArg);
+    PyObject *pyMethod = PyObject_GetAttrString(delegate, cMethod);
+    printf("pyMethod: %x\n", pyMethod);
     NSString *res = NULL;
     if (pyMethod != NULL) {
-        PyObject *arglist = Py_BuildValue("(s)", [arg UTF8String]);
+        PyObject *arglist = Py_BuildValue("(s)", cArg);
         if (arglist != NULL) {
-            PyObject *pyRes = PyObject_CallObject(delegate, arglist);
+            printf("calling method\n");
+            PyObject *pyRes = PyObject_CallObject(pyMethod, arglist);
             if (pyRes != NULL) {
                 char *string = PyString_AsString(pyRes);
+                printf("res: %s\n", string);
                 if (string != NULL) {
                     res = [NSString stringWithUTF8String:string];
                 }
                 Py_DECREF(pyRes);
+            } else {
+                PyErr_PrintEx(0);
             }
         }
         Py_DECREF(arglist);

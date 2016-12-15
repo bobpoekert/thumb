@@ -33,8 +33,11 @@ class Server(object):
         return
 
     def test(self, inp):
-        print 'called test'
-        return 'you said: %s' % inp
+        try:
+            print 'called test'
+            return 'you said: %s' % inp
+        except Exception, e:
+            return repr(e)
 
 def main(handle):
     print 'called main'
