@@ -9,6 +9,9 @@
 #include "PythonGlue.h"
 
 int main(int argc, char *argv[]) {
+    int res;
     PythonGlue_Init(argc, argv);
-    return NSApplicationMain(argc,  (const char **) argv);
+    res = NSApplicationMain(argc,  (const char **) argv);
+    PythonGlue_Finalize();
+    return res;
 }

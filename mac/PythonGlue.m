@@ -1,10 +1,8 @@
 #include <Python/Python.h>
 #import "AppDelegate.h"
+#include "PythonGlue.h"
 
 #define CAPSULE_NAME "webkit"
-
-#pragma message "PythonGlue.h"
-
 #define PY_REPL PyRun_SimpleString("import pdb; pdb.set_trace()")
 
 PyObject *NSStringToPythonString(NSString *inp) {
@@ -16,43 +14,47 @@ PyObject *wrapNSObject(NSObject *inp) {
     return PyCapsule_New(inp, CAPSULE_NAME, NULL); 
 }
 
+NSString *_callJavascript(AppDelegate *context, NSString *codeString) {
+    NSString *resString = [context evalJavascript:codeString];
+    return resString;
+}
+
 static PyObject *module_evalJS(PyObject *self, PyObject *args) {
     PyObject *contextCapsule;
+    PyObject *res;
     char *codeString;
-    NSString *resString = NULL;
+    __block NSString *resString = NULL;
     if (!PyArg_ParseTuple(args, "Os", &contextCapsule, &codeString)) return NULL;
     AppDelegate *context = PyCapsule_GetPointer(contextCapsule, CAPSULE_NAME);
-    printf("app delegate context %x\n", context);
-    if (context != NULL) {
-        resString = [context evalJavascript:[NSString stringWithUTF8String:codeString]];
-    }
-    Py_DECREF(contextCapsule);
-    if (resString == NULL) {
-        return NULL;
+    NSString *nsCodeString = [NSString stringWithUTF8String:codeString];
+   
+    Py_BEGIN_ALLOW_THREADS
+    if ([NSThread isMainThread]) {
+        resString = _callJavascript(context, nsCodeString);
     } else {
-        return NSStringToPythonString(resString);
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            resString = _callJavascript(context, nsCodeString);
+        });
     }
+    Py_END_ALLOW_THREADS
+    
+    return NSStringToPythonString(resString);
+}
+
+static PyObject *module_resourcePath(PyObject *self, PyObject *args) {
+    NSString *mainPath = [[[NSBundle mainBundle] resourceURL] absoluteString];
+    return NSStringToPythonString(mainPath);
 }
 
 static PyMethodDef CallbackMethods[] = {
     {"eval_js", module_evalJS, METH_VARARGS, "evaluate the given javascript string in the given context and return the result as a string"},
+    {"path", module_resourcePath, METH_VARARGS, 
+        "returns the filesystem path that application python modules are in"},
     {NULL, NULL, 0, NULL}
 };
 
-void updatePythonPath(char *newPath) {
-    PyObject *locals = Py_BuildValue("{s:s}", "resources", newPath);
-    PyObject *globals = PyDict_New();
-    PyRun_String("import sys; sys.path.insert(0, resources)", 0, globals, locals);
-}
-
-void addResourceToPythonPath() {
-    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
-    char *cResourcePath = [resourcePath UTF8String];
-    updatePythonPath(cResourcePath);
-}
-
 PyObject *loadDelegate(NSObject *obj) {
-    PyGILState_STATE gilState = PyGILState_Ensure();
+    PY_BEGIN
     PyObject *delegate = NULL;
     PyObject *module = PyImport_ImportModule("main");
     if (module != NULL) {
@@ -68,7 +70,7 @@ PyObject *loadDelegate(NSObject *obj) {
         }
         Py_DECREF(module);
     }
-    PyGILState_Release(gilState);
+    PY_END
     return delegate;
 }
 
@@ -83,9 +85,15 @@ PyObject *callFuncWithString(PyObject *func, char *arg) {
 void PythonGlue_Init(int argc, char **argv) {
     Py_SetProgramName(argv[0]);
     Py_Initialize();
-    Py_InitModule("_webkit_callback", CallbackMethods);
-    //addResourceToPythonPath();
-    PyRun_SimpleString("import sys,os; sys.path.insert(0, os.getcwd())");
-    //printf("starting repl\n");
-    //PY_REPL;
+    Py_InitModule("_webkit", CallbackMethods);
+    PyRun_SimpleString(
+            "import sys,_webkit,os;"
+            "sys.path.insert(0, os.getcwd());"
+            "sys.path.insert(0, _webkit.path())");
+    PyEval_InitThreads();
+    PyEval_SaveThread();
+}
+
+void PythonGlue_Finalize() {
+    Py_Finalize();
 }

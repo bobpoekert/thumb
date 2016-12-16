@@ -1,4 +1,4 @@
-from _webkit_callback import eval_js
+from _webkit import eval_js
 import json
 import threading, time
 import traceback, inspect
@@ -10,15 +10,17 @@ class Server(object):
     def __init__(self, webkit_handle):
         try:
             self.webkit_handle = webkit_handle
-            #self.thread = threading.Thread(target=self.delay_test)
-            #self.thread.start()
+            self.thread = threading.Thread(target=self.delay_test)
+            self.thread.start()
+            print 'thread start start'
             #print self.eval_js('document.write(app.callPython("test", "hello"))')
             print repr(self.eval_js('typeof(window.container.callPython("test", "foo")'))
         except:
             traceback.print_exc()
 
     def delay_test(self):
-        time.sleep(0.5)
+        print 'thread start'
+        time.sleep(1.0)
         print 'delay'
         self.send_message('hello')
 

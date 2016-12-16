@@ -65,27 +65,22 @@
 	//return [[[NSBundle mainBundle] URLForResource:@"index" withExtension:@"html"] absoluteString];
 }
 
-
-
 - (NSString *)callPython:(NSString *)method:(NSString *)arg {
+    PY_BEGIN
     char *cMethod = [method UTF8String];
     char *cArg = [arg UTF8String];
-    printf("callPython\n");
-    PyGILState_STATE gilState = PyGILState_Ensure();
-    printf("got gil\n");
     PyObject *delegate = pythonDelegate;
-    printf("delegate: %x, method: %s, arg: %s\n", delegate, cMethod, cArg);
+    if (delegate == NULL) {
+        return NULL;
+    }
     PyObject *pyMethod = PyObject_GetAttrString(delegate, cMethod);
-    printf("pyMethod: %x\n", pyMethod);
     NSString *res = NULL;
     if (pyMethod != NULL) {
         PyObject *arglist = Py_BuildValue("(s)", cArg);
         if (arglist != NULL) {
-            printf("calling method\n");
             PyObject *pyRes = PyObject_CallObject(pyMethod, arglist);
             if (pyRes != NULL) {
                 char *string = PyString_AsString(pyRes);
-                printf("res: %s\n", string);
                 if (string != NULL) {
                     res = [NSString stringWithUTF8String:string];
                 }
@@ -97,7 +92,7 @@
         Py_DECREF(arglist);
     }
     Py_DECREF(pyMethod);
-    PyGILState_Release(gilState);
+    PY_END
     return res;
 }
 
