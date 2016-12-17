@@ -61,8 +61,7 @@
 // Here we grab the URL to the bundled index.html document.
 // Normally it would be the URL to your web app such as @"http://example.com".
 - (NSString *)appURL {
-    return @"/Users/bob/code/thumb-app/mac/index.html";
-	//return [[[NSBundle mainBundle] URLForResource:@"index" withExtension:@"html"] absoluteString];
+	return [[[NSBundle mainBundle] URLForResource:@"index" withExtension:@"html"] absoluteString];
 }
 
 - (NSString *)callPython:(NSString *)method:(NSString *)arg {
