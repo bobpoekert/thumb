@@ -87,9 +87,11 @@ void PythonGlue_Init(int argc, char **argv) {
     Py_Initialize();
     Py_InitModule("_webkit", CallbackMethods);
     PyRun_SimpleString(
-            "import sys,_webkit,os;"
+            "import sys,_webkit,os,urlparse,urllib;"
+            "path = urllib.unquote(urlparse.urlparse(_webkit.path()).path);"
+            "print repr(path);"
             "sys.path.insert(0, os.getcwd());"
-            "sys.path.insert(0, _webkit.path())");
+            "sys.path.insert(0, path)");
     PyEval_InitThreads();
     PyEval_SaveThread();
 }

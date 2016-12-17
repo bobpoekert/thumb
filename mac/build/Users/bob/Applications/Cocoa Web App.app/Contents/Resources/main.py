@@ -20,15 +20,16 @@ class Server(object):
 
     def delay_test(self):
         print 'thread start'
-        time.sleep(1.0)
-        print 'delay'
-        self.send_message('hello')
+        ctr = 0
+        while 1:
+            time.sleep(0.01)
+            print self.send_message(ctr)
+            ctr += 1
 
     def eval_js(self, js):
         return eval_js(self.webkit_handle, js)
 
     def send_message(self, message):
-        print 'sending message %s' % message
         return self.eval_js('pythonMessage(%s)' % json.dumps(message))
 
     def recieve_message(self, message_string):
