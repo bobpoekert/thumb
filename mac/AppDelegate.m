@@ -6,6 +6,7 @@
 @implementation AppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+    pythonDelegate = loadDelegate(self);
 	[webView setMainFrameURL:[self appURL]];
 }
 
@@ -61,7 +62,8 @@
 // Here we grab the URL to the bundled index.html document.
 // Normally it would be the URL to your web app such as @"http://example.com".
 - (NSString *)appURL {
-	return [[[NSBundle mainBundle] URLForResource:@"index" withExtension:@"html"] absoluteString];
+    return [self callPython:@"get_url":@""];
+	//return [[[NSBundle mainBundle] URLForResource:@"index" withExtension:@"html"] absoluteString];
 }
 
 - (NSString *)callPython:(NSString *)method:(NSString *)arg {
@@ -105,9 +107,6 @@
 	// Allow this class to be usable through the "window.app" object in JavaScript
 	// This could be any Objective-C class
 	[windowScriptObject setValue:self forKey:@"app"];
-    printf("finished launching\n");
-    pythonDelegate = loadDelegate(self);
-    printf("got delegate: %x\n", pythonDelegate);
 }
 
 @end

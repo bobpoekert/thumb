@@ -23,8 +23,12 @@ class Server(object):
         ctr = 0
         while 1:
             time.sleep(0.01)
-            print self.send_message(ctr)
+            self.send_message(ctr)
             ctr += 1
+
+    def get_url(self, _):
+        print 'get url'
+        return 'file:///Users/bob/code/oasis-tv/oasis-react/public/index.html'
 
     def eval_js(self, js):
         return eval_js(self.webkit_handle, js)

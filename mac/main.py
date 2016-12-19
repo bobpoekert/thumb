@@ -2,6 +2,7 @@ from _webkit import eval_js
 import json
 import threading, time
 import traceback, inspect
+import os
 
 print 'loading module'
 
@@ -23,8 +24,12 @@ class Server(object):
         ctr = 0
         while 1:
             time.sleep(0.01)
-            print self.send_message(ctr)
+            self.send_message(ctr)
             ctr += 1
+
+    def get_url(self, _):
+        print 'get url'
+        return 'file:///%s/index.html' % os.path.abspath(os.getcwd())
 
     def eval_js(self, js):
         return eval_js(self.webkit_handle, js)
